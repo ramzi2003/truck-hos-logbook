@@ -118,9 +118,6 @@ export function LogbookSheet({ dateText, log, formData, recapValues }: LogbookSh
   const gridH = headerH + gridBodyH
   const gridBodyY = gridY + headerH
 
-  // 24h scale across gridW (used by sections below, not the duty chart)
-  const _hourW = gridW / 24
-
   // Vertical offset so the whole logbook content sits a bit lower on the page.
   const topOffset = 24
 
@@ -157,7 +154,6 @@ export function LogbookSheet({ dateText, log, formData, recapValues }: LogbookSh
 
   // Recap section with a bit more bottom margin below Shipping so they don't overlap.
   const recapY = shippingBoxY + shippingBoxH + 24
-  const _recapH = 170
 
   // No “bottom extra” section in the paper form screenshot (those boxes are at the top),
   // so we don’t draw a separate bottom block.
