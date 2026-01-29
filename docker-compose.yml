@@ -35,7 +35,7 @@ services:
     env_file:
       - backend/.env
     environment:
-      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend
+      # DJANGO_ALLOWED_HOSTS: set in backend/.env (include your server IP or domain, e.g. 46.101.129.205)
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       # POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD from backend/.env via env_file
