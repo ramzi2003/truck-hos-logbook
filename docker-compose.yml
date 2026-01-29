@@ -1,0 +1,69 @@
+# Truck HOS Trip Planner - Docker Compose for server deployment
+# Usage: docker compose up -d
+# App: http://localhost:8082/driversdailylogbook/ (port 8082; 80/8080/8081 etc. may be in use)
+# To use another port, change frontend ports (e.g. "8083:80")
+# API is proxied at /api (same origin as frontend)
+#
+# Backend env: use backend/.env (DJANGO_SECRET_KEY, MAPBOX_ACCESS_TOKEN,
+#   POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, etc.)
+# Frontend build: VITE_API_BASE_URL is /api. For Mapbox, set VITE_MAPBOX_TOKEN
+#   in your shell before "docker compose build" or in frontend/.env (see README).
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: truck-hos-db
+    restart: unless-stopped
+    env_file:
+      - backend/.env
+    # Set POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD in backend/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: truck-hos-backend
+    restart: unless-stopped
+    env_file:
+      - backend/.env
+    environment:
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      # POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD from backend/.env via env_file
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(2); s.connect(('127.0.0.1', 8000)); s.close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+        # Pass Mapbox token at build time: set in shell or in frontend/.env (Dockerfile reads it)
+        VITE_MAPBOX_TOKEN: ${VITE_MAPBOX_TOKEN:-}
+    container_name: truck-hos-frontend
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

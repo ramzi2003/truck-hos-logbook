@@ -1,0 +1,24 @@
+# Dependencies and build output
+node_modules
+dist
+.npm
+
+# Env (use build args in Dockerfile)
+.env
+.env.*
+
+# Git and IDE
+.git
+.gitignore
+*.md
+.idea
+.vscode
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Misc
+*.log
+coverage
+.eslintcache

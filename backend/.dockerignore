@@ -1,0 +1,27 @@
+# Virtual env and caches
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.coverage
+htmlcov
+
+# Local DB and env (use volumes/env at runtime)
+db.sqlite3
+.env
+.env.*
+
+# Git and IDE
+.git
+.gitignore
+*.md
+.idea
+.vscode
+
+# Docker
+Dockerfile
+.dockerignore
