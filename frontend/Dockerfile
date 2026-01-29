@@ -4,9 +4,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies (npm install so lock file need not be in sync with package.json)
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 
 # Build args for Vite env (baked in at build time)
 # Use /api so nginx can proxy to backend - no host needed at build time
