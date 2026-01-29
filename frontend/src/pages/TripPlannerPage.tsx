@@ -4,14 +4,14 @@ import { useAuth } from '../auth/AuthContext'
 import { api } from '../api/client'
 import { TripForm } from '../components/TripForm'
 import { HosLog } from '../components/HosLog'
-import { MapView } from '../components/MapView'
+import { MapView, type Waypoint } from '../components/MapView'
 
 type TripPlanResponse = {
   distance_m: number
   duration_s: number
   geometry: number[][]
   stops: any[]
-  waypoints?: { type: string; lng: number; lat: number; label: string }[]
+  waypoints?: Waypoint[]
   logs: {
     date: string
     segments: {

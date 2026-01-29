@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { api } from '../api/client'
 
 type AuthContextValue = {
   isAuthenticated: boolean

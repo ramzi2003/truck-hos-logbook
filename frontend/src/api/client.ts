@@ -22,9 +22,9 @@ api.interceptors.request.use((config) => {
   const token = window.localStorage.getItem(ACCESS_KEY)
   if (token) {
     config.headers = {
-      ...(config.headers || {}),
+      ...(config.headers as Record<string, string>),
       Authorization: `Bearer ${token}`,
-    }
+    } as typeof config.headers
   }
   return config
 })
@@ -89,9 +89,9 @@ api.interceptors.response.use(
 
         // Retry the original request with the new token
         originalConfig.headers = {
-          ...(originalConfig.headers || {}),
+          ...(originalConfig.headers as Record<string, string>),
           Authorization: `Bearer ${newAccess}`,
-        }
+        } as typeof originalConfig.headers
         return api.request(originalConfig)
       } catch {
         // fall through to logout below
