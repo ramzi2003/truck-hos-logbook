@@ -1,5 +1,5 @@
 # Truck HOS Backend - Django REST API
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt gunicorn
 # Copy application code
 COPY . .
 
-# Data dir for SQLite (optional volume mount)
-RUN mkdir -p /data && chown -R appuser:appuser /app /data
+# Non-root user and data dir
+RUN adduser --disabled-password --gecos "" appuser && mkdir -p /data && chown -R appuser:appuser /app /data
 USER appuser
 
 EXPOSE 8000
